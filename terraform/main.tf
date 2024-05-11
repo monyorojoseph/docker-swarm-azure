@@ -181,39 +181,7 @@ module "vm-02" {
 
 module "vm-03" {
   source              = "./modules/vm_linux"
-  vm_name             = "manager-two-vm"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
-  subnet_id           = azurerm_subnet.subnet.id
-}
-module "vm-04" {
-  source              = "./modules/vm_linux"
   vm_name             = "worker-one-vm"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
-  subnet_id           = azurerm_subnet.subnet.id
-}
-
-module "vm-05" {
-  source              = "./modules/vm_linux"
-  vm_name             = "worker-two-vm"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
-  subnet_id           = azurerm_subnet.subnet.id
-}
-
-
-module "vm-06" {
-  source              = "./modules/vm_linux"
-  vm_name             = "worker-three-vm"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
-  subnet_id           = azurerm_subnet.subnet.id
-}
-
-module "vm-07" {
-  source              = "./modules/vm_linux"
-  vm_name             = "worker-four-vm"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   subnet_id           = azurerm_subnet.subnet.id
