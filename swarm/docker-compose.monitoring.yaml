@@ -29,7 +29,7 @@ services:
       # - ./datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml    # handle on custom image
 
     deploy:
-      replicas: 1
+      replicas: 2
 
 networks:
   monitoring:
@@ -37,4 +37,4 @@ networks:
     attachable: true
       
 volumes:
-  grafana-storage: {}
+  grafana-storage:

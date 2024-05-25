@@ -22,12 +22,19 @@ services:
       - 8000:8000
     networks:
       - loginapp
+      - monitoring
     environment:
-      - ALLOWED_HOSTS=localhost
+      # - ALLOWED_HOSTS=localhost prometheus
+      - DEBUG=False
       - SECRET_KEY=ca13f095ca2e07882b9db2b1f980328c9f8669e9b5d65b51ccd15cfe4e03018d
       - DB_URL=postgres://postgres:postgres@db:5432/loginapp
+      - EMAIL_HOST=smtp.gmail.com
+      - EMAIL_HOST_USER=xxxx@gmail.com
+      - EMAIL_HOST_PASSWORD=yyyyy
+      - REDIS_URL=redis://redis:6379/?db=1
     depends_on:
       - db
+      - redis
     deploy:
       mode: replicated
       replicas: 25
@@ -39,6 +46,30 @@ services:
       rollback_config:
         parallelism: 1
         delay: 30s
+
+
+  task:
+    image: monyorojoseph/loginapp
+    command: ["manage.py", "run_heuy"]
+    restart: unless-stopped
+    networks:
+      - loginapp
+      # - monitoring
+    environment:
+      # - ALLOWED_HOSTS=localhost prometheus
+      - DEBUG=False
+      - SECRET_KEY=ca13f095ca2e07882b9db2b1f980328c9f8669e9b5d65b51ccd15cfe4e03018d
+      - DB_URL=postgres://postgres:postgres@db:5432/loginapp
+      - EMAIL_HOST=smtp.gmail.com
+      - EMAIL_HOST_USER=xxxx@gmail.com
+      - EMAIL_HOST_PASSWORD=yyyyy
+      - REDIS_URL=redis://redis:6379/?db=1
+    depends_on:
+      - db
+      - redis
+    deploy:
+      mode: global
+
       
   db:
     image: postgres:13
@@ -54,10 +85,29 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_DB: loginapp
 
+  redis:
+    image: redis
+    restart: unless-stopped
+    ports:
+      - 6379:6379
+    volumes:
+      - redis_vm:/usr/local/etc/redis
+    networks:
+      - loginapp
+    deploy:
+      mode: global
+
+
+
 networks:
   loginapp:
     name: loginapp
     attachable: true
 
+  monitoring:
+    name: monitoring
+    external: true
+
 volumes:
   loginapp_db:
+  redis_vm:
