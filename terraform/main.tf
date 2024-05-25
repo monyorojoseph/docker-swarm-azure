@@ -32,135 +32,23 @@ resource "azurerm_subnet_network_security_group_association" "nsg_association" {
 }
 
 # NSG rules
-resource "azurerm_network_security_rule" "ssh" {
-  name                        = "ssh"
+resource "azurerm_network_security_rule" "rules" {
+  for_each               = { for rule in var.ports : rule.name => rule }
+  name                   = each.value.name
+  priority               = each.value.priority
+  destination_port_range = each.value.dest_port
+  direction              = each.value.direction
+  protocol               = each.value.protocol
+
+
   access                      = "Allow"
-  priority                    = 300
-  direction                   = "Inbound"
-  protocol                    = "Tcp"
   source_port_range           = "*"
-  destination_port_range      = "22"
   source_address_prefix       = "*"
   destination_address_prefix  = "*"
   resource_group_name         = azurerm_resource_group.rg.name
   network_security_group_name = azurerm_network_security_group.nsg.name
 }
 
-resource "azurerm_network_security_rule" "http" {
-  name                        = "http"
-  access                      = "Allow"
-  priority                    = 310
-  direction                   = "Inbound"
-  protocol                    = "Tcp"
-  source_port_range           = "*"
-  destination_port_range      = "80"
-  source_address_prefix       = "*"
-  destination_address_prefix  = "*"
-  resource_group_name         = azurerm_resource_group.rg.name
-  network_security_group_name = azurerm_network_security_group.nsg.name
-}
-
-resource "azurerm_network_security_rule" "https" {
-  name                        = "https"
-  access                      = "Allow"
-  priority                    = 320
-  direction                   = "Inbound"
-  protocol                    = "Tcp"
-  source_port_range           = "*"
-  destination_port_range      = "443"
-  source_address_prefix       = "*"
-  destination_address_prefix  = "*"
-  resource_group_name         = azurerm_resource_group.rg.name
-  network_security_group_name = azurerm_network_security_group.nsg.name
-}
-
-# docker swarm nsg
-resource "azurerm_network_security_rule" "manager_nodes_in_bound" {
-  name                        = "ManagerNodesInBound"
-  access                      = "Allow"
-  priority                    = 330
-  direction                   = "Inbound"
-  protocol                    = "Tcp"
-  source_port_range           = "*"
-  destination_port_range      = "2377"
-  source_address_prefix       = "*"
-  destination_address_prefix  = "*"
-  resource_group_name         = azurerm_resource_group.rg.name
-  network_security_group_name = azurerm_network_security_group.nsg.name
-}
-
-resource "azurerm_network_security_rule" "overlay_network_node_discovery_in_bound" {
-  name                        = "OverlayNetworkNodeDiscoveryInBound"
-  access                      = "Allow"
-  priority                    = 340
-  direction                   = "Inbound"
-  protocol                    = "*"
-  source_port_range           = "*"
-  destination_port_range      = "7946"
-  source_address_prefix       = "*"
-  destination_address_prefix  = "*"
-  resource_group_name         = azurerm_resource_group.rg.name
-  network_security_group_name = azurerm_network_security_group.nsg.name
-}
-
-
-resource "azurerm_network_security_rule" "overlay_network_traffic_in_bound" {
-  name                        = "OverlayMetworkTrafficInBound"
-  access                      = "Allow"
-  priority                    = 350
-  direction                   = "Inbound"
-  protocol                    = "Udp"
-  source_port_range           = "*"
-  destination_port_range      = "4789"
-  source_address_prefix       = "*"
-  destination_address_prefix  = "*"
-  resource_group_name         = azurerm_resource_group.rg.name
-  network_security_group_name = azurerm_network_security_group.nsg.name
-}
-
-
-resource "azurerm_network_security_rule" "manager_nodes_out_bound" {
-  name                        = "ManagerNodesOutBound"
-  access                      = "Allow"
-  priority                    = 360
-  direction                   = "Outbound"
-  protocol                    = "Tcp"
-  source_port_range           = "*"
-  destination_port_range      = "2377"
-  source_address_prefix       = "*"
-  destination_address_prefix  = "*"
-  resource_group_name         = azurerm_resource_group.rg.name
-  network_security_group_name = azurerm_network_security_group.nsg.name
-}
-
-resource "azurerm_network_security_rule" "overlay_network_node_discovery_out_bound" {
-  name                        = "OverlayNetworkNodeDiscoveryOutbound"
-  access                      = "Allow"
-  priority                    = 370
-  direction                   = "Outbound"
-  protocol                    = "*"
-  source_port_range           = "*"
-  destination_port_range      = "7946"
-  source_address_prefix       = "*"
-  destination_address_prefix  = "*"
-  resource_group_name         = azurerm_resource_group.rg.name
-  network_security_group_name = azurerm_network_security_group.nsg.name
-}
-
-
-resource "azurerm_network_security_rule" "overlay_network_traffic_out_bound" {
-  name                        = "OverlayMetworkTrafficOutbound"
-  access                      = "Allow"
-  priority                    = 380
-  direction                   = "Outbound"
-  protocol                    = "Udp"
-  source_port_range           = "*"
-  destination_port_range      = "4789"
-  source_address_prefix       = "*"
-  destination_address_prefix  = "*"
-  resource_group_name         = azurerm_resource_group.rg.name
-  network_security_group_name = azurerm_network_security_group.nsg.name
-}
 
 # VMs -> modules
 module "vm-01" {
