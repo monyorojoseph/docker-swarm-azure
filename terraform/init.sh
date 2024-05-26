@@ -14,9 +14,7 @@ echo \
 sudo apt-get update -y
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 sudo groupadd docker 
-sudo usermod -aG docker $USER 
+# sudo usermod -aG docker $USER 
 echo "{
   \"metrics-addr\" : \"$(hostname -i):9323\",
-  \"experimental\" : true
 }" | sudo tee /etc/docker/daemon.json
-exit

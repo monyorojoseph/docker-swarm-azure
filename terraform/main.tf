@@ -3,6 +3,25 @@ resource "azurerm_resource_group" "rg" {
   location = "southafricanorth"
 }
 
+# swarm nfs
+resource "azurerm_storage_account" "nfs-account" {
+  name                     = "beelineswarmnfs"
+  resource_group_name      = azurerm_resource_group.rg.name
+  location                 = azurerm_resource_group.rg.location
+  account_tier             = "Premium"
+  account_replication_type = "LRS"
+  account_kind = "FileStorage"
+}
+
+# resource "azurerm_storage_share" "swarm-nfs-file" {
+#   name                 = "beelineswarmnfsfile"
+#   storage_account_name = azurerm_storage_account.nfs-account.name
+#   quota = 1000
+#   enabled_protocol = "NFS"
+#   depends_on = [ azurerm_storage_account.nfs-account ]
+
+# }
+
 # vnet
 resource "azurerm_virtual_network" "vnet" {
   name                = "beeline-swarm-vnet"

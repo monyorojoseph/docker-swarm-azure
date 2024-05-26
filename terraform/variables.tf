@@ -64,5 +64,13 @@ variable "ports" {
       direction = "Outbound"
       protocol  = "Udp"
     },
+
+     {
+      name      = "prometheus"
+      dest_port = "9090"
+      priority  = "309"
+      direction = "Inbound"
+      protocol  = "Tcp"
+    },
   ]
 }
