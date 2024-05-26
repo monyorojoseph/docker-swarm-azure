@@ -17,7 +17,7 @@ Terraform commands to run <br>
 ```
 terraform init
 terraform plan
-terraform apply<img width="231" alt="Screenshot 2024-05-26 at 13 25 08" src="https://github.com/monyorojoseph/docker-swarm-azure/assets/72988723/56c8e6d6-e3ae-4adc-85b3-ffa6b5b9b225">
+terraform apply
 
 ```
 <br>
